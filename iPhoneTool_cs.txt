@@ -1,0 +1,340 @@
+using System;
+using System.Windows.Forms;
+using MetroFramework;
+using MetroFramework.Forms;
+using iMobileDevice.Recovery;
+using iMobileDevice.Restore;
+using iMobileDevice.Service;
+using iMobileDevice.iDevice;
+using iMobileDevice;
+using System.Collections.ObjectModel;
+using iMobileDevice.Lockdown;
+using iMobileDevice.Plist;
+using System.ServiceProcess;
+using System.IO;
+//using AppleJuice.Properties;
+using System.Reflection;
+using System.Diagnostics;
+
+namespace iPhoneTool
+{
+    public partial class Form1 : MetroForm
+    {
+
+        public string detail;
+        private bool architecture = Environment.Is64BitOperatingSystem;
+        private string env;
+
+        // main method for loading the application form
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            this.Size = new System.Drawing.Size(585, 723);
+            getDeviceInfoButton.Enabled = false;
+        }
+        public void getDeviceList()
+        {
+            UsbBrowser.PrintUsbDevices();
+        }
+
+        public void RestartServiceIfNotRunning(string serviceName, int timeoutMilliseconds)
+        {
+            serviceName = "AppleMobileDeviceService"; //  restart apple mobile device service
+            ServiceController service = new ServiceController(serviceName);
+            try
+            {
+                int millisec1 = Environment.TickCount;
+                TimeSpan timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds);
+
+                service.Stop();
+                serviceLabel.Text = "Stopping Apple Mobile Device Service";
+                service.WaitForStatus(ServiceControllerStatus.Stopped, timeout);
+
+                // count the rest of the timeout
+                int millisec2 = Environment.TickCount;
+                timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds - (millisec2 - millisec1));
+
+                service.Start();
+                service.WaitForStatus(ServiceControllerStatus.Running, timeout);
+                serviceLabel.Text = "Apple Mobile Device Service Restarted !";
+            }
+            catch
+            {
+                MetroMessageBox.Show(this, "Apple Mobile Device Service Status", "Currently Already Running\r\nor\r\nNot Configured Correctly !");
+                serviceLabel.Text = "Apple Mobile Device Service Failed to Restart !";
+            }
+        }
+       
+        public Form1()
+        {
+            InitializeComponent();
+            //NativeLibraries.Load();
+            getEnvironment();
+        }
+        
+
+        private void GetDevInfoBTN_Click(object sender, EventArgs e)
+        {
+            ListDevs();
+            getDeviceList();
+            getDeviceType();
+        }
+
+        private void ListDevs()
+        {
+            
+            //Console.WriteLine("Starting the imobiledevice-net demo");
+
+            // This demo application will use the libimobiledevice API to list all iOS devices currently
+            // connected to this PC.
+
+            // First, we need to make sure the unmanaged (native) libimobiledevice libraries are loaded correctly
+            NativeLibraries.Load();
+
+            ReadOnlyCollection<string> udids;
+            int count = 0;
+            
+            var idevice = LibiMobileDevice.Instance.iDevice;
+            var lockdown = LibiMobileDevice.Instance.Lockdown;
+            count++;
+            connectedDevicesLabel.Text = count.ToString();
+           
+            var ret = idevice.idevice_get_device_list(out udids, ref count);
+
+            if (ret == iDeviceError.NoDevice)
+            {
+                // Not actually an error in our case
+                MetroMessageBox.Show(this,"No devices found", "Device Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                return;
+            }
+
+            ret.ThrowOnError();
+
+            // Get the device name
+            foreach (var udid in udids)
+            {
+
+                iDeviceHandle deviceHandle;
+                idevice.idevice_new(out deviceHandle, udid).ThrowOnError();
+
+                LockdownClientHandle lockdownHandle;
+                lockdown.lockdownd_client_new_with_handshake(deviceHandle, out lockdownHandle, "Quamotion").ThrowOnError();
+
+                
+                lockdown.lockdownd_get_device_name(lockdownHandle, out string deviceName).ThrowOnError();
+                deviceLBL.Text = deviceName;
+                udidLBL.Text = udid;
+
+                //serial
+                //product
+                //activation
+                //type
+                //modelnum
+                //buildver
+                //hardwaremodel
+                //IMEI
+                //ECID - UCID (unique chip id)
+
+                //Find serial number in plist
+                lockdown.lockdownd_get_value(lockdownHandle, null, "SerialNumber", out PlistHandle tested1);
+
+                //Find product version in plist
+                lockdown.lockdownd_get_value(lockdownHandle, null, "ProductVersion", out PlistHandle tested2);
+
+                //Find activation state in plist
+                lockdown.lockdownd_get_value(lockdownHandle, null, "ActivationState", out PlistHandle tested3);
+
+                //Find product type in plist
+                lockdown.lockdownd_get_value(lockdownHandle, null, "ProductType", out PlistHandle tested4);
+
+                //Find product type in plist
+                lockdown.lockdownd_get_value(lockdownHandle, null, "ModelNumber", out PlistHandle tested5);
+
+                //Find build version in plist
+                lockdown.lockdownd_get_value(lockdownHandle, null, "BuildVersion", out PlistHandle tested6);
+
+                //Find Hardware model in plist
+                lockdown.lockdownd_get_value(lockdownHandle, null, "HardwareModel", out PlistHandle tested7);
+
+                //Find Hardware model in plist
+                lockdown.lockdownd_get_value(lockdownHandle, null, "IMEI", out PlistHandle tested8);
+
+                //Find Hardware model in plist
+                lockdown.lockdownd_get_value(lockdownHandle, null, "UniqueChipID", out PlistHandle tested9);
+
+                //Get string values from plist
+                tested1.Api.Plist.plist_get_string_val(tested1, out string t1);    //serial
+                tested2.Api.Plist.plist_get_string_val(tested2, out string t2);    //product
+                tested3.Api.Plist.plist_get_string_val(tested3, out string t3);    //activation
+                tested4.Api.Plist.plist_get_string_val(tested4, out string t4);    //type
+                tested5.Api.Plist.plist_get_string_val(tested5, out string t5);    //modelnum
+                tested6.Api.Plist.plist_get_string_val(tested6, out string t6);    //buildver
+                tested7.Api.Plist.plist_get_string_val(tested7, out string t7);    //hardwaremodel
+                tested8.Api.Plist.plist_get_string_val(tested8, out string t8);    //IMEI
+                tested9.Api.Plist.plist_get_string_val(tested9, out string t9);    //ECID 
+
+                //Place data in textboxes                                   
+                serialLBL.Text = t1.Trim();
+                iOSLBL.Text = t2.Trim();
+                activationStateLBL.Text = t3.Trim();
+                deviceModelLabel.Text = t4.Trim();
+                modelNumLBL.Text = t5.Trim();
+                hardwareModelLBL.Text = t6.Trim();
+                buildVerLBL.Text = t7.Trim();
+                //imeiLBL.Text = t8.Trim();
+                //ecidLBL.Text = t9.Trim();
+
+                tested1.Dispose();      
+                tested2.Dispose();      
+                tested3.Dispose();      
+                tested4.Dispose();      
+                tested5.Dispose();
+                tested6.Dispose();
+                tested7.Dispose();
+                tested8.Dispose();
+                tested9.Dispose();
+
+                deviceHandle.Dispose();
+                lockdownHandle.Dispose();
+
+            }
+        }
+        
+
+        private void DevLinkLBL_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://youtube.com/subscription_center?add_user=HaKDMoDz");
+        }
+
+        
+        // function calls getDeviceInfoButton and sets value of enabled = true
+        private void WebBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            getDeviceInfoButton.Enabled = true;
+            
+        }
+        // method for working out device name eg: iphone7plus = iPhone9,4
+        private void getDeviceType()
+        {
+            string[] devs = { "", "", "", "", "", "", "", "", "", "", "", "", "", "(iPhone 6+)", "(iPhone 6)", "(iPhone 6s)", "(iPhone 6s+)", "(iPhone SE)", "(iPhone9,1)", "(iPhone9,2)", "(iPhone9,3)", "(iPhone9,4)", "(iPhone10,1)", "(iPhone10,2)", "(iPhone10,3)", "(iPhone10,4)", "(iPhone10,5)", "(iPhone10,6)", "(iPhone11,2)", "(iPhone11,4)", "(iPhone11,6)", "(iPhone11,8)" };
+            string selectDevice = "(" + deviceModelLabel.Text + ")";
+            int selection = Array.IndexOf(devs, selectDevice);
+            MetroMessageBox.Show(this, selection.ToString(), "Device Located within Index @:");
+
+        }
+
+        // checks host operating system architecture value eg: 32bit or 64bit windows and outputs to architectureLabel
+        public void getEnvironment()
+        {
+            
+            switch (architecture)
+            {
+                case false:
+                    env = "32 bit";
+                    architectureLabel.Text = env;
+                    break;
+                case true:
+                    env = //"64 bit";
+                    architectureLabel.Text = env;
+                    break;
+                default:
+                    env = "";
+                    architectureLabel.Text = null;
+                    break;
+            }
+
+        }
+        
+        public void copyDetail()
+        {
+            Clipboard.SetText(detail);
+        }
+
+        private void serialLBL_Click(object sender, EventArgs e)
+        {
+            detail = serialLBL.Text;
+            Clipboard.SetText(detail);
+        }
+
+        private void ecidLBL_Click(object sender, EventArgs e)
+        {
+            detail = ecidLBL.Text;
+            Clipboard.SetText(detail);
+        }
+
+        private void imeiLBL_Click(object sender, EventArgs e)
+        {
+            detail = imeiLBL.Text;
+            Clipboard.SetText(detail);
+        }
+
+        private void HardwareModelLBL_Click(object sender, EventArgs e)
+        {
+            detail = serialLBL.Text;
+            Clipboard.SetText(detail);
+        }
+
+        private void modelNumLBL_Click(object sender, EventArgs e)
+        {
+            detail = modelNumLBL.Text;
+            Clipboard.SetText(detail);
+        }
+
+        private void iOSLBL_Click(object sender, EventArgs e)
+        {
+            detail = iOSLBL.Text;
+            Clipboard.SetText(detail);
+        }
+
+        private void buildVerLBL_Click(object sender, EventArgs e)
+        {
+            detail = buildVerLBL.Text;
+            Clipboard.SetText(detail);
+        }
+
+        private void activationStateLBL_Click(object sender, EventArgs e)
+        {
+            detail = activationStateLBL.Text;
+            Clipboard.SetText(detail);
+        }
+
+        private void udidLBL_Click(object sender, EventArgs e)
+        {
+            detail = udidLBL.Text;
+            Clipboard.SetText(detail);
+        }
+
+        private void deviceLBL_Click(object sender, EventArgs e)
+        {
+            detail = deviceLBL.Text;
+            Clipboard.SetText(detail);
+        }
+
+        private void deviceModelLBL_Click(object sender, EventArgs e)
+        {
+            detail = deviceModelLabel.Text;
+            Clipboard.SetText(detail);
+        }
+
+        private void ConnectedDevicesLabel_Click(object sender, EventArgs e)
+        {
+            detail = connectedDevicesLabel.Text;
+            Clipboard.SetText(detail);
+        }
+        
+        private void Tss_button_Click(object sender, EventArgs e)
+        {
+            AppleJuice.tss_saver_form tf = new AppleJuice.tss_saver_form();
+            tf.Show();
+        }
+
+        
+        private void itools_Click_2(object sender, EventArgs e)
+        {
+            ProcessStartInfo p = new ProcessStartInfo();
+            Process.Start("iPhoneTool\\iPhoneTool\\bin\\Debug\\iPhoneTool\\win-x64\\idevicepair.exe", "pair -u FF47A2B1D7D1A22B8499E43F8CCE850D85EC0336");
+            
+            //p.FileName = "idevicePair.exe";
+        }
+    }
+
+}

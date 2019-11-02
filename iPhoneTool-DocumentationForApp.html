@@ -1,0 +1,340 @@
+<!Doctype HTML>
+<en="UTF-8">
+    <html>
+
+    <head>
+        <pre style="word-wrap: break-word; white-space: pre-wrap;"></pre>
+        <title>
+            Technical iDevice
+        </title>
+        <style>
+            body {
+                background-color: black;
+                color: white;
+                margin: 3px;
+                padding: 1px;
+            }
+            
+            h1 {
+                color: dodgerblue;
+            }
+            
+            h2 {
+                color: gold;
+            }
+            
+            title {
+                color: yellow;
+                size: 25px;
+                text-decoration: shadow 2px 1px;
+                text-decoration-color: blueviolet;
+            }
+            
+            footer {
+                color: lime;
+                size: 20px;
+                text-align: left;
+            }
+            /* Add a black background color to the top navigation */
+            
+            .topnav {
+                background-color: #333;
+                overflow: hidden;
+            }
+            /* Style the links inside the navigation bar */
+            
+            .topnav a {
+                float: left;
+                display: block;
+                color: #f2f2f2;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+            /* Change the color of links on hover */
+            
+            .topnav a:hover {
+                background-color: #ddd;
+                color: black;
+            }
+            /* Add an active class to highlight the current page */
+            
+            .topnav a.active {
+                background-color: #4CAF50;
+                color: white;
+            }
+            /* Hide the link that should open and close the topnav on small screens */
+            
+            <!-- .topnav .icon {
+                display: none;
+            }
+            
+            --><!-- div.right-content-image {
+                height: auto;
+                width: auto;
+                background-color: white;
+                float: right;
+                display: -webkit-inline-flex;
+            }
+            
+            -->-->img#top-right-image {
+                height: 300px;
+                width: 400px;
+                background-color: white;
+                border: solid 1px lime;
+            }
+            
+            <!-- #left-content {
+                float: left;
+                width: auto;
+                height: auto;
+                margin: 5px;
+                padding: 2px;
+            }
+            
+            -->
+        </style>
+        <script>
+            /**@buttonFunction*/
+            function myFunction() {
+                var x = document.getElementById("myDIV");
+                if (x.innerHTML === "Hello") {
+                    x.innerHTML = "Swapped text!";
+                } else {
+                    x.innerHTML = "Hello";
+                }
+            }
+        </script>
+    </head>
+
+    <body>
+
+        <!--/**@topNavBarResponsive*/-->
+        <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <div class="topnav" id="myTopnav">
+            <a href="#home" class="active">Home</a>
+            <a href="#news">News</a>
+            <a href="#contact">Contact</a>
+            <a href="#about">About</a>
+            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                <i class="fa fa-bars"></i>
+            </a>
+        </div>
+        <div id="left-content">
+            <ol>
+                <h1><b>Contents</b></h1><br>
+                <li>Technical details</li>
+                <li>iTunes code signing</li>
+                <li>Features</li>
+                <li>Requirements</li>
+                <li>UDID Section</li>
+                <li>Format</li>
+                <li>Usage</li>
+                <li>Calculation</li>
+                <li>References</li>
+                <li>IMEI</li>
+                <li>IPSW</li>
+                <li>Activation Token</li>
+                <li>iTunes Backup Procedure Understanding</li>
+                <li>Settings (Lockdownd)</li>
+            </ol>
+            <button onclick="myFunction()">Click Me</button>
+            <div id="myDIV">Button</div>
+        </div>
+        <div class="right-content-image">
+            <img src="appl3.png" id="top-right-image" name="image-apple"></img>
+        </div>
+        <class id="my-content">
+            <p id="1">
+                <h1>SHSH Blob's</h1>
+                A SHSH blob is a term for a small piece of data that is part of Apple's digital signature protocol for iOS restores and updates, designed to control the iOS versions that users can install on their iOS devices (iPhones, iPads, iPod touches, and Apple
+                TVs), generally only allowing the newest iOS version to be installable. This process is controlled by the TATSU ("TSS") Signing Server (gs.apple.com) where updates and restores can only be completed by iTunes if the version of iOS is being
+                signed. Developers interested in iOS jailbreaking have made tools for working around this signature system in order to install jailbreakable older iOS versions that are no longer being signed by Apple.[1][2]
+                <h1>Technical details</h1>
+                "SHSH blobs" (also called "ECID SHSH"[3]) is an unofficial term referring to the digital signatures that Apple generates and uses to personalize IPSW (iOS firmware) files for each device; they are part of Apple's protocol designed to ensure that trusted
+                software is installed on the device.[4] Apple's public name for this process is System Software Personalization (System Software Authorization as of iOS 7+).[5] SHSH blobs are created by a hashing formula that has multiple keys, including
+                the device type, the iOS version being signed, and the device's ECID (a unique identification number embedded in its hardware).[6] When Apple wishes to restrict users' ability to restore their devices to a particular iOS version, Apple
+                can refuse to generate this hash during the restore attempt, and the restore will not be successful (or at least will require bypassing the intended function of the system).[7][8] This protocol is part of iPhone 3GS and later devices.[9]
+            </p>
+            <p id="2">
+                <h1>TATSU Code Signing for iOS Deployment &amp; iTunes verification</h1>
+                When iTunes restores or updates an iOS firmware, Apple has added many checkpoints before the iOS version is installed and on-device consolidation begins. At the first "Verifying iPhone software" iTunes communicates with "gs.apple.com" to verify that the
+                IPSW file provided is still being signed. The TATSU server will give back a list of versions being signed. If the version is not being signed, then iBEC and iBoot will decline the image, giving an error of "error 3194" or "declined to
+                authorize the image" iTunes will communicate with iBoot throughout the process of an update or restore ensuring the firmware has not been modified to a Custom Firmware ("CFW"). iTunes will not update or restore a device when it suspects
+                the file has been modified. This is a chain process, before the firmware has been installed iBoot has to verify iBoot, iBoot has to verify the bootloader, and so on. You cannot install unsigned iOS versions, unless 1) you have SHSH2 blobs
+                and exploits have been released or 2) you exploit the chain process.
+            </p>
+            <p id="3">
+                <h1>Find My iPhone</h1>
+                Find My (before iOS 13, iPadOS, watchOS 6 and macOS Catalina called Find My iPad, Find My iPod touch, Find my Apple Watch, Find My iPhone (or Find iPhone on SpringBoard) or Find My Mac) is an app and service provided by Apple Inc. that allows remote location
+                tracking of iOS devices, Mac computers, Apple Watch, and AirPods. Since March 2013, the service has been available for iOS 5 or later and OS X 10.7.5 "Lion" or later through iCloud. The service itself is integrated into iOS and macOS,
+                while enabled devices can be tracked using either an iOS app or the iCloud website. On iOS 8 and older, the app can be downloaded from the App Store free of charge. Starting with iOS 9, the app has been bundled with the operating system.[1]
+                For the app to work, both the tracker device and the device being located must be supported devices with the Find My iPhone app installed and Location Services turned on, and both must be connected to the same iCloud account.[3] The tracked
+                device can also be located through iCloud on Windows, but cannot be used the other way around to locate the PC.
+            </p>
+            <p id="4">
+                <h1>Features</h1>
+                Find My iPhone allows users to locate their iOS devices using either the iOS app or iCloud on a computer (such as a desktop). In addition to locating a device, the service provides three additional options: Play sound – makes the device play a sound at
+                maximum volume, makes flashing on screen even if it is muted. This feature is useful if the device has been mislaid,[3] and is equivalent to finding a mislaid phone by calling it using another phone. Lost mode (iOS 6 or later) – flags
+                the device as lost or stolen, allowing the user to lock it with a passcode. If the device is an iPhone and someone finds the device, they can call the user directly on the device.[4][5][6] Erase iPhone – completely erases all content and
+                settings, which is useful if the device contains sensitive information, but the device cannot be located after this action is performed. Starting with iOS 7 or later, after the erase is complete, the message can still be displayed and
+                the device will be activation locked. This makes it hard for someone to use or sell the device. An Apple ID password will be required to turn off Find My iPhone, sign out of iCloud, erase the device, or reactivate a device after a remote
+                wipe. The update with iOS 6 added the ability to check the device's battery level.[1] Since the release of iOS 7 users have complained about the link between GPS, WiFi, and the app itself. Some handset owners have noted the app enables
+                and disables itself when passing between cellular protocol bandwidths.[citation needed]
+            </p>
+            <p id="5">
+                <h1>Requirements</h1>
+                For the Find My iPhone app to work, the user must have set up an iCloud account to create the user’s Apple ID. Each device to be tracked must be linked to the same Apple ID, and the Location Services feature must also be turned on on each device to be
+                tracked. Location is determined using GPS in the iOS device when Location Services are turned on, but the location of the iOS device is only approximate. To turn Location Services on, go to Settings &gt; Privacy &gt; Location Services,
+                then selecting the Find My iPhone app in the list and selecting the “While Using the App“ option. To deactivate the app, select the “Never” option instead. The user can also track the device by signing in to iCloud.com. As of January 2013,
+                Find My iPhone is supported on iPhone, iPad, iPod Touch, and Mac computers running OS X 10.7.5 "Lion" or later.[7] In addition to a compatible device, a free iCloud account is required to use Find My iPhone.[3] Users also can track their
+                Find My iPhone enabled devices through iCloud on Windows, but cannot use it the other way around to track their PC.
+            </p>
+            <p id="6">
+                <h1>UDID</h1>
+                This article includes a list of references, related reading or external links, but its sources remain unclear because it lacks inline citations. Please help to improve this article by introducing more precise citations. (October 2015) (Learn how and when
+                to remove this template message) Not to be confused with IMEI. UDID is an acronym for Unique Device ID. The UDID is a feature of Apple's iOS devices. It is a unique identifier for a single device that is fetched from Apple servers when
+                a user tries to activate the device using iCloud or the Setup app. This ID is also used by iTunes to detect the phone or to communicate with it while restoring the iPSW firmware.
+            </p>
+            <p id="7">
+                <h2>Format</h2>
+                This Unique ID is created from 40 letters and numbers, 25 for an iPhone XR or XS. It is not written on the iDevice cover as the IMEI is, but it can be retrieved by iTunes in normal mode.
+                <h2>Usage</h2>
+                Apple usually uses this ID to assign Apple ID and iCloud ID to the device. This also holds the Find My iPhone activation status.
+                <h2>Calculation</h2>
+                The UDID is calculated as follows:
+                <h3>For iPhone 4 and Newer</h3>
+                <ul>
+                    <li>UDID = SHA1(serial + ECID + wifiMac + bluetoothMac)</li>
+                    <li>All other devices use:</li>
+                    <li>UDID = SHA1(serial + IMEI + wifiMac + bluetoothMac)</li>
+                </ul>
+            </p>
+            <h2>References</h2>
+            <ul>
+                <li>The iPhone Wiki page</li>
+                <li>Find your UDID of iDevices</li>
+            </ul>
+            <p id="8">
+                </h1>IMEI</h1>
+            </p>
+            <p id="ipsw_sect">
+                <h1>IPSW Section</h1>
+                <h2>IPSW File Format</h2>
+                "IPSW" redirects here. For the component of XPwn, see ipsw. See also: Disk Image Formats IPSW (iPod[1] Software) files have the Magic Number 504B0304 (PK\003\004) and thus areZIP archives. They can be modified with typical zip/unzip tools (i.e. change
+                extension to .zip and double click). IPSW's are used to deliver the device's firmware to the end-user.
+                <h2>Archive Structure</h2>
+                <ul>
+                    <li>Restore Ramdisk</li>
+                    <li>Update Ramdisk (some firmwares don't have one due to various reasons)</li>
+                    <li>Filesystem Ramdisk (the largest .dmg file)</li>
+                    <li>Device Tree (model specific)</li>
+                    <li>Kernelcache (model specific; processor specific on pre-A4)</li>
+                    <li>BuildManifest.plist (first appeared in iPhone OS 3.0 beta 2)</li>
+                    <li>Restore.plist</li>
+                    <li>Firmware/</li>
+                    <li>all_flash/</li>
+                    <li>all_flash.XXXXX.production/ (model specific i.e. M68AP, N82AP, etc.)</li>
+                    <li>IMG2/IMG3 files</li>
+                    <li>manifest</li>
+                    <li>dfu/</li>
+                    <li>iBEC.XXXXX.dfu (model specific i.e. M68AP, N82AP, etc.)</li>
+                    <li>iBSS.XXXXX.dfu</li>
+                    <li>Baseband (may be one or many files depending on the model)</li>
+                    <li>Example</li>
+                </ul>
+                <ul>
+                    <li>Here are the contents of the iPhone 3GS 3.0 (7A341) firmware IPSW:</li>
+                    <li></li>
+                    <li>018-5302-002.dmg (281214976 bytes)</li>
+                    <li>018-5304-002.dmg (12769604 bytes)</li>
+                    <li>018-5306-002.dmg (12777796 bytes)</li>
+                    <li>BuildManifest.plist (21097 bytes)</li>
+                    <li>kernelcache.release.s5l8920x (4695492 bytes)</li>
+                    <li>Restore.plist (1763 bytes)</li>
+                    <li>Firmware/</li>
+                    <li>all_flash/</li>
+                    <li>all_flash.n88ap.production/</li>
+                    <li>applelogo.s5l8920x.img3 (9604 bytes)</li>
+                    <li>batterycharging0.s5l8920x.img3 (19716 bytes)</li>
+                    <li>batterycharging1.s5l8920x.img3 (24900 bytes)</li>
+                    <li>batteryfull.s5l8920x.img3 (76100 bytes)</li>
+                    <li>batterylow0.s5l8920x.img3 (56772 bytes)</li>
+                    <li>batterylow1.s5l8920x.img3 (65348 bytes)</li>
+                    <li>DeviceTree.n88ap.img3 (44996 bytes)</li>
+                    <li>glyphcharging.s5l8920x.img3 (20356 bytes)</li>
+                    <li>glyphplugin.s5l8920x.img3 (19332 bytes)</li>
+                    <li>iBoot.n88ap.RELEASE.img3 (178500 bytes)</li>
+                    <li>LLB.n88ap.RELEASE.img3 (67908 bytes)</li>
+                    <li>manifest (341 bytes)</li>
+                    <li>needservice.s5l8920x.img3 (20484 bytes)</li>
+                    <li>recoverymode.s5l8920x.img3 (47876 bytes)</li>
+                    <li>dfu/</li>
+                    <li>iBEC.n88ap.RELEASE.dfu (104772 bytes)</li>
+                    <li>iBSS.n88ap.RELEASE.dfu (104772 bytes)</li>
+                </ul>
+            </p>
+            <p id="activate_token">
+                <h1>Activation Token</h1>
+                <h2>Contents</h2>
+                <ol>1 Layout of Activation Token
+                    <li>Key: ActivationInfoXML</li>
+                    <li></li>Activation Protocol</li>
+                    <li></li>Resources</li>
+                </ol>
+            </p>
+            &nbsp;
+            <p id="activation_token_structure_guide">
+                Layout of Activation Token This is the CFDictionary string representation which gets sent to Apple's server. The object can be obtained by using the MobileDevice Library, AMDeviceCopyValue function with the "ActivationInfo" value. &nbsp; It is generated
+                by lockdownd. Upon generation it stores ActivationRandomness in data ark and later checks it, thus only the last generated token is valid. SHA1 is generated in lockdown and then it makes a request to fairplayd to complete signature process
+                and obtain certificate chain.
+                <h2>
+                    This is the Structure of the Activation Response Token: </h2>
+                &nbsp; &lt;dict&gt; &lt;key&gt;ActivationInfoComplete&lt;/key&gt; &lt;true/&gt; &lt;key&gt;ActivationInfoXML&lt;/key&gt; (base64-encoded activation info here) &lt;key&gt;FairPlayCertChain&lt;/key&gt; (base64-encoded RSA certificate chain including root
+                CA in DER format) &lt;key&gt;FairPlaySignature&lt;/key&gt; (base64-encoded signature (SHA1+RSA) of ActivationInfoXML, validated using FairPlayCertChain certificate) &lt;/dict&gt; Key: ActivationInfoXML The ActivationInfo plist file above
+                has a key called ActivationInfoXML. The base64 data value of that key represents the plist file below &lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+                &lt;plist version="1.0"&gt; &lt;dict&gt; &lt;key&gt;ActivationRandomness&lt;/key&gt; &lt;string&gt;(GUID)&lt;/string&gt; &lt;key&gt;ActivationRequiresActivationTicket&lt;/key&gt; &lt;true/&gt; &lt;key&gt;ActivationState&lt;/key&gt; &lt;string&gt;Unactivated&lt;/string&gt;
+                &lt;key&gt;BasebandMasterKeyHash&lt;/key&gt; &lt;string&gt;(Hash of hardware IDs)&lt;string&gt; &lt;key&gt;BasebandThumbprint&lt;/key&gt; &lt;string&gt;(Hash of hardware IDs not directly used as a key - the TEA key can be derived from
+                this)&lt;string&gt; &lt;key&gt;BuildVersion&lt;/key&gt; &lt;string&gt;8A306&lt;/string&gt; &lt;key&gt;DeviceCertRequest&lt;/key&gt; (base64 encoded cert) &lt;key&gt;DeviceClass&lt;/key&gt;&lt;string&gt;(String ENUM "iPhone", "iPod", "iPod
+                touch", "iPad")&lt;/string&gt; &lt;key&gt;IntegratedCircuitCardIdentity&lt;/key&gt; &lt;string&gt;(ICCID as base-10 string)&lt;/string&gt; &lt;key&gt;InternationalMobileEquipmentIdentity&lt;/key&gt;&lt;string&gt;(IMEI as base-10 string)&lt;/string&gt;
+                &lt;key&gt;InternationalMobileSubscriberIdentity&lt;/key&gt; &lt;string&gt;(IMSI as base-10 string)&lt;/string&gt; &lt;key&gt;ModelNumber&lt;/key&gt; &lt;string&gt;MC135&lt;/string&gt;&lt;key&gt;PhoneNumber&lt;/key&gt; &lt;string&gt;(String
+                like "+1 (555) 555-5555")&lt;/string&gt; &lt;key&gt;ProductType&lt;/key&gt; &lt;string&gt;iPhone2,1&lt;/string&gt; &lt;key&gt;ProductVersion&lt;/key&gt; &lt;string&gt;4.0.1&lt;/string&gt; &lt;string&gt;SIMGID1&lt;/string&gt; (base64-encoded
+                binary GID1) &lt;string&gt;SIMGID2&lt;/string&gt; (base64-encoded binary GID2) &lt;key&gt;SIMStatus&lt;/key&gt; &lt;string&gt;(ENUM kCTSIMSupportSIMStatusReady kCTSIMSupportSIMStatusNotReadykCTSIMSupportSIMStatusOperatorLocked)&lt;/string&gt;
+                &lt;key&gt;SerialNumber&lt;/key&gt; &lt;string&gt;...&lt;/string&gt; &lt;key&gt;SupportsPostponement&lt;/key&gt; &lt;true/&gt; &lt;key&gt;UniqueChipID&lt;/key&gt; &lt;integer&gt;...&lt;/integer&gt; &lt;key&gt;UniqueDeviceID&lt;/key&gt;
+                &lt;string&gt;(hex UUID)&lt;/string&gt; &lt;/dict&gt; &lt;/plist&gt; SIMGID's and PhoneNumber are present only if installed SIM has them and it was read correctly. If ActivationState is Unactivated or token signature is not correct, Apple
+                server will respond with message "there's problem with your device".
+                <br>
+                <h2>Activation Protocol</h2>
+                Use SSL and send the request below with the values POST /WebObjects/ALUnbrick.woa/wa/deviceActivation HTTP/1.1 Accept-Encoding: gzip Accept-Language: en-us, en;q=0.50 Content-Type: multipart/form-data; boundary=DeviceActivation Content-Length: 1234 Host:
+                albert.apple.com Cache-Control: no-cache --DeviceActivation Content-Disposition: form-data; name="activation-info" &lt;dict&gt; &lt;key&gt;ActivationInfoComplete&lt;/key&gt; &lt;true/&gt; &lt;key&gt;ActivationInfoXML&lt;/key&gt; (base64-encoded
+                activation info here) &lt;key&gt;FairPlayCertChain&lt;/key&gt; (base64-encoded cert in DER format) &lt;key&gt;FairPlaySignature&lt;/key&gt; (base64-encoded signature (SHA1+RSA) of ActivationInfoXML) &lt;/dict&gt;
+            </p>
+            <br>
+            <h1>Resources</h1>
+            Posixninja's iDeviceActivator For Windows
+            <h1>iTunes Backup</h1>
+            <p id="itunes_backup">
+                The following description is to describe the backup system of iTunes, which is often used for forensic analysis of iDevices. This description is for the format used in iTunes 10.5.3 an newer - older versions are slightly different (see Understanding iPhone
+                Backup Files). The description is for non-encrypted backups only. On the iDevice the file /System/Library/Backup/Domains.plist determines what files to backup. There is a differentiation between "domains" and relative files. In each backup,
+                there are four files with infos, which are described later:
+                <ul>
+                    <li>Info.plist</li>
+                    <li>Manifest.mdbd</li>
+                    <li>Info.plist</li>
+                    <li>
+                        <Status.plist</li>
+                </ul>
+            </p>
+            <br>
+            <p id="encryption_info"></p>
+            </pre>
+        </class>
+    </body>
+    <footer>
+        &ApplyFunction; HaKDMoDz™ 2019&copy;
+    </footer>
+
+    </html>

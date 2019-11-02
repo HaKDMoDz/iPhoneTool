@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29009.5
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iPhoneTool", "iPhoneTool\iPhoneTool.csproj", "{4AEB67FE-E402-4B8C-86D7-ABB5FFAF8672}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "appleByte", "..\appleByte\appleByte\appleByte.csproj", "{435E2DD4-A401-4FE2-B09E-E049A425C43C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4AEB67FE-E402-4B8C-86D7-ABB5FFAF8672}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AEB67FE-E402-4B8C-86D7-ABB5FFAF8672}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AEB67FE-E402-4B8C-86D7-ABB5FFAF8672}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AEB67FE-E402-4B8C-86D7-ABB5FFAF8672}.Release|Any CPU.Build.0 = Release|Any CPU
+		{435E2DD4-A401-4FE2-B09E-E049A425C43C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{435E2DD4-A401-4FE2-B09E-E049A425C43C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{435E2DD4-A401-4FE2-B09E-E049A425C43C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{435E2DD4-A401-4FE2-B09E-E049A425C43C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E6ED7B7-5C37-41B0-B4C7-1FD2579ED079}
+	EndGlobalSection
+EndGlobal
